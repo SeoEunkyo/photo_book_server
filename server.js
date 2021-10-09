@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
 })
 
 const mongoose = require('mongoose');
-const mongoosinfo = require('./dbinfo');
+const mongoosinfo = require('./private/dbinfo');
 
 const upload = multer({
     storage, limits: { fileSize: 1024 * 1024 * 5 }, fileFilter: (req, file, cb) => {
