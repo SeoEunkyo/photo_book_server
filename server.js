@@ -24,11 +24,16 @@ const port = 5000;
 
 mongoose.connect(process.env.Mongo_URI
 ).then(() => {
+    app.use('/uploads', express.static('uploads'));
 
-    app.post('/upload', upload.single("image"), async (req, res) => {
+    app.post('/images', upload.single("image"), async (req, res) => {
         // console.log(req.file);
-        await new Image({key : req.file.fieldname, originalFileName : req.file.originalname }).save();
-        res.json({ result: "success" });
+        const images = await new Image({key : req.file.filename, originalFileName : req.file.originalname }).save();
+        res.json(images);
+    })
+    app.get('/images', async (req, res) =>{
+        const images = await Image.find();
+        res.json(images)
     })
     app.listen(port, () => console.log("Express server listening on PORT " + port));
     console.log('mongodb conected!!')
