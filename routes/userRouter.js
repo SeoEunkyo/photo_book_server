@@ -4,7 +4,7 @@ const User = require('../models/User')
 const {hash ,compare} = require("bcryptjs")
 
 
-userRouter.post('/resister', async(req,res)=>{
+userRouter.post('/register', async(req,res)=>{
 
     try {
         if (req.body.password.length < 6) throw new Error("password 길이는 6글자 이상!");
