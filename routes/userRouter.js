@@ -60,6 +60,7 @@ userRouter.patch('/login', async (req,res)=>{
 
 userRouter.patch("/logout", async(req,res)=>{
     try {
+        console.log(req.headers);
 
         const {sessionid} = req.headers;
         if(!req.user) throw new Error('invalid session id');
@@ -69,7 +70,8 @@ userRouter.patch("/logout", async(req,res)=>{
         res.json({message : "user is logged out."});
 
     } catch (error) {
-        res.status(400).json({message : error.message})
+        console.log(error);
+        res.status(400).json({message : error.message});
     }
 
 })

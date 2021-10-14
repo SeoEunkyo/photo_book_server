@@ -10,8 +10,9 @@ const app = express();
 const {Mongo_URI , PORT} = process.env;
 
 
-mongoose.connect(Mongo_URI
-).then(() => {
+mongoose.connect(Mongo_URI , {       
+    autoIndex: true,
+}).then(() => {
     app.use('/uploads', express.static('uploads'));
     app.use(express.json())
     app.use( autuenticate) ;
