@@ -77,4 +77,21 @@ userRouter.patch("/logout", async(req,res)=>{
 })
 
 
+userRouter.get("/me" , (req,res) =>{
+
+    try {
+     
+        if(!req.user) throw new Error("사용자 권한이 없습니다.") ;
+        res.json({
+            message: '성공적인 로그인을 하였습니다.',
+            sessionId: req.headers.sessionid,
+            name: req.user.name
+        })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({message : error.message});
+    }
+})
+
 module.exports = {userRouter};
