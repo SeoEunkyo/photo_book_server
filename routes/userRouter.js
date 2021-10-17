@@ -2,7 +2,7 @@ const {Router} = require("express");
 const userRouter = Router();
 const User = require('../models/User')
 const {hash ,compare} = require("bcryptjs")
-
+const Images = require("../models/Images")
 
 userRouter.post('/register', async(req,res)=>{
 
@@ -37,6 +37,7 @@ userRouter.patch('/login', async (req,res)=>{
 
     try{
         const user = await User.findOne({username : req.body.username});
+        if(!user) throw new Error("email을 알수 없습니다.");
         // console.log(user);
         const isValid = await compare(req.body.password, user.hashedPassword);
         if(!isValid) throw new Error("입력하신 정보가 올바르지 않습니다");
@@ -92,6 +93,21 @@ userRouter.get("/me" , (req,res) =>{
         console.log(error);
         res.status(400).json({message : error.message});
     }
+})
+
+userRouter.get("/me/images", async (req,res)=>{
+
+    try {
+        if(!req.user) throw new Error("사용자권한을 확인하세요");
+        const images = await Images.find({ "user._id": req.user.id });
+        res.json(images);
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: error.message });
+    }
+
+
 })
 
 module.exports = {userRouter};
