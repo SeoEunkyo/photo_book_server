@@ -23,6 +23,7 @@ userRouter.post('/register', async(req,res)=>{
             message: '성공적인 가입이 되었습니다.',
             sessionId: session._id,
             name: newUser.name,
+            id : newUser._id
         })
 
     } catch (error) {
@@ -47,7 +48,8 @@ userRouter.patch('/login', async (req,res)=>{
         res.json({
             message: '성공적인 로그인을 하였습니다.',
             sessionId: session._id,
-            name: user.name
+            name: user.name,
+            id : user._id
         })
 
 
@@ -86,7 +88,8 @@ userRouter.get("/me" , (req,res) =>{
         res.json({
             message: '성공적인 로그인을 하였습니다.',
             sessionId: req.headers.sessionid,
-            name: req.user.name
+            name: req.user.name,
+            id:req.user._id
         })
         
     } catch (error) {
@@ -98,6 +101,7 @@ userRouter.get("/me" , (req,res) =>{
 userRouter.get("/me/images", async (req,res)=>{
 
     try {
+        console.log("req.user : ", req.user);
         if(!req.user) throw new Error("사용자권한을 확인하세요");
         const images = await Images.find({ "user._id": req.user.id });
         res.json(images);

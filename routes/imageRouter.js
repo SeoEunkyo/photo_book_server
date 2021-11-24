@@ -8,21 +8,28 @@ const mongoose = require('mongoose');
 
 const fileUnlink = promisify(fs.unlink);
 
-imageRouter.post('/', upload.single("image"), async (req, res) => {
+imageRouter.post('/', upload.array("image",5), async (req, res) => {
     // 유저 정보 확인 , public 유뮤확인
 
     try {
         if(!req.user) throw new Error("사용자 권한이 없습니다");
-        const images = await new Image({
-            user : {
-                _id : req.user.id,
-                name : req.user.name,
-                username : req.user.username,
-            },
-            public : req.body.public,
-            key: req.file.filename,
-            originalFileName:req.file.originalname
-        }).save();
+        const images = await Promise.all(
+            req.files.map(async file => {
+                const image = await new Image({
+                    user: {
+                        _id: req.user.id,
+                        name: req.user.name,
+                        username: req.user.username,
+                    },
+                    public: req.body.public,
+                    key: file.filename,
+                    originalFileName: file.originalname
+                }).save();
+
+                return image
+            })
+        ) 
+        
         res.json(images);
     } catch (error) {
         console.error(error);
